@@ -140,3 +140,21 @@ Bei Fragen oder Problemen:
 **💪 Gemeinsam zum rauchfreien Leben!**
 
 *Entwickelt mit Fokus auf Selbstwirksamkeit, Autonomie und partnerschaftliche Unterstützung.*
+
+## 🆕 Version 2.0 - Update vom 20.08.2025
+
+### Neue Features:
+- ⏱️ **Timer**: Zeit seit letzter Zigarette wird angezeigt
+- ↩️ **Rückgängig**: Doppelklick zum Korrigieren
+- 📊 **30-Tage Historie**: Automatische Datenspeicherung
+- 💾 **Export/Import**: Backup deiner Daten
+- ⚙️ **Settings-Tab**: Vollständige Kontrolle
+- 📱 **Verbesserte Mobile UX**: Bessere Touch-Response
+- 🎯 **Intelligenteres Coaching**: Dynamische Nachrichten
+- 🏆 **Erweiterte Achievements**: Mehr Motivations-Features
+
+### Bugfixes:
+- Zuverlässigere Datenspeicherung
+- Korrekte Zeitzonenbehandlung
+- Verbesserte Progress-Berechnung
+- Bessere Mobile-Performance
