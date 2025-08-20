@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiUmF1Y2hGcmVpIER1byIsInNob3J0X25hbWUiOiJSYXVjaEZyZWkiLCJzdGFydF91cmwiOiIvIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzY2N2VlYSIsInRoZW1lX2NvbG9yIjoiIzY2N2VlYSJ9">
     <title>RauchFrei Duo - Gemeinsam zum Ziel</title>
     
     <style>
@@ -12,6 +14,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         
         :root {
@@ -38,6 +41,8 @@
             min-height: 100vh;
             color: var(--gray-900);
             line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
         
         .container {
@@ -45,6 +50,7 @@
             margin: 0 auto;
             padding: 1rem;
             min-height: 100vh;
+            padding-bottom: 100px;
         }
         
         .card {
@@ -82,6 +88,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 0.5rem;
         }
         
@@ -100,12 +107,27 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            position: relative;
         }
         
         .user-btn.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
+        }
+        
+        .user-btn input {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-weight: 600;
+            text-align: center;
+            width: 90%;
+            outline: none;
         }
         
         .stats-grid {
@@ -120,6 +142,18 @@
             padding: 1rem;
             border-radius: 0.75rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
         }
         
         .stat-value {
@@ -149,29 +183,40 @@
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
             position: relative;
         }
         
+        .cigarette-btn:active {
+            transform: scale(0.95);
+        }
+        
         .cigarette-btn.smoked {
             background: var(--danger);
             border-color: var(--danger);
             color: white;
+            animation: smokedPulse 0.5s ease-out;
+        }
+        
+        @keyframes smokedPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
         
         .cigarette-btn.emergency {
             border-color: var(--warning);
-            background: var(--warning);
+            background: linear-gradient(135deg, var(--warning), #f59e0b88);
             color: white;
         }
         
         .cigarette-time {
-            position: absolute;
-            bottom: 0.25rem;
             font-size: 0.625rem;
             color: var(--gray-600);
+            margin-top: 0.25rem;
         }
         
         .cigarette-btn.smoked .cigarette-time {
@@ -184,6 +229,7 @@
             border-radius: 1rem;
             overflow: hidden;
             margin: 1rem 0;
+            position: relative;
         }
         
         .progress-fill {
@@ -196,6 +242,7 @@
             color: white;
             font-weight: 600;
             font-size: 0.875rem;
+            min-width: 50px;
         }
         
         .withdrawal-tracker {
@@ -207,11 +254,17 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 0.75rem;
+            padding: 0.5rem;
+            background: var(--gray-50);
+            border-radius: 0.5rem;
         }
         
         .withdrawal-label {
             font-weight: 500;
             color: var(--gray-700);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         .withdrawal-scale {
@@ -220,13 +273,13 @@
         }
         
         .scale-btn {
-            width: 2rem;
-            height: 2rem;
+            width: 1.75rem;
+            height: 1.75rem;
             border: 1px solid var(--gray-300);
             background: white;
             border-radius: 0.25rem;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             transition: all 0.2s;
         }
         
@@ -234,6 +287,7 @@
             background: var(--primary);
             color: white;
             border-color: var(--primary);
+            transform: scale(1.1);
         }
         
         .trigger-list {
@@ -256,6 +310,7 @@
         .trigger-tag.active {
             background: var(--primary);
             color: white;
+            transform: scale(1.05);
         }
         
         .achievement-card {
@@ -267,6 +322,18 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            animation: achievementUnlock 0.5s ease-out;
+        }
+        
+        @keyframes achievementUnlock {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
         
         .achievement-icon {
@@ -337,6 +404,10 @@
             transform: translateY(-2px);
         }
         
+        .btn:active {
+            transform: translateY(0);
+        }
+        
         .btn-secondary {
             background: var(--gray-200);
             color: var(--gray-700);
@@ -344,6 +415,14 @@
         
         .btn-secondary:hover {
             background: var(--gray-300);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
         }
         
         .coach-message {
@@ -367,16 +446,17 @@
         
         .tab-navigation {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.5rem;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.25rem;
             margin-bottom: 1rem;
             background: white;
             padding: 0.5rem;
             border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         .tab-btn {
-            padding: 0.75rem 0.5rem;
+            padding: 0.75rem 0.25rem;
             background: transparent;
             border: none;
             border-radius: 0.5rem;
@@ -384,7 +464,15 @@
             font-weight: 500;
             color: var(--gray-600);
             transition: all 0.2s;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .tab-btn .tab-icon {
+            font-size: 1.25rem;
         }
         
         .tab-btn.active {
@@ -423,6 +511,12 @@
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
             transition: all 0.2s;
             z-index: 1000;
+            animation: crisisPulse 2s infinite;
+        }
+        
+        @keyframes crisisPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         .crisis-btn:hover {
@@ -441,6 +535,12 @@
             justify-content: center;
             padding: 1rem;
             z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         .modal-content {
@@ -451,6 +551,18 @@
             width: 100%;
             max-height: 80vh;
             overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
         
         .modal-header {
@@ -473,22 +585,184 @@
             border: 4px solid var(--primary);
             border-radius: 50%;
             margin: 0 auto 1rem;
-            animation: breathe 4s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+        
+        .breath-circle.breathing {
+            animation: breathe 19s ease-in-out;
         }
         
         @keyframes breathe {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.2);
-            }
+            0%, 100% { transform: scale(1); }
+            21% { transform: scale(1.3); }
+            58% { transform: scale(1.3); }
+            100% { transform: scale(1); }
         }
         
         .breath-text {
             font-size: 1.25rem;
             font-weight: 600;
             color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .history-entry {
+            padding: 0.75rem;
+            background: var(--gray-50);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .history-date {
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+        
+        .history-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .history-stat {
+            color: var(--gray-600);
+        }
+        
+        .chart-container {
+            height: 200px;
+            margin: 1rem 0;
+            position: relative;
+            background: var(--gray-50);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        
+        .chart-bar {
+            position: absolute;
+            bottom: 2rem;
+            background: linear-gradient(to top, var(--primary), var(--success));
+            border-radius: 0.25rem 0.25rem 0 0;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .chart-bar:hover {
+            opacity: 0.8;
+        }
+        
+        .chart-label {
+            position: absolute;
+            bottom: 0;
+            font-size: 0.625rem;
+            color: var(--gray-600);
+            transform: translateX(-50%);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 3000;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateX(-50%) translateY(-100%);
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        .settings-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .settings-group h4 {
+            color: var(--gray-700);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: var(--gray-50);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .settings-label {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .settings-input {
+            width: 60px;
+            padding: 0.25rem 0.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 0.25rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: var(--gray-300);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: var(--success);
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(24px);
+        }
+        
+        @media (max-width: 380px) {
+            .tab-navigation {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            
+            .tab-btn {
+                font-size: 0.7rem;
+                padding: 0.5rem 0.25rem;
+            }
+            
+            .cigarette-tracker {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
     </style>
 </head>
@@ -500,18 +774,39 @@
     <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <script type="text/babel">
-        const { useState, useEffect, useCallback, useMemo } = React;
+        const { useState, useEffect, useCallback, useMemo, useRef } = React;
         
         const SmokingCessationApp = () => {
             // Core State
             const [currentUser, setCurrentUser] = useState('A');
             const [activeTab, setActiveTab] = useState('today');
             const [showCrisisModal, setShowCrisisModal] = useState(false);
+            const [showNotification, setShowNotification] = useState(null);
+            const [editingName, setEditingName] = useState({ A: false, B: false });
             
-            // User Data State
+            // User Data State mit erweiterten Features
             const [userData, setUserData] = useState(() => {
                 const saved = localStorage.getItem('smokingData');
-                if (saved) return JSON.parse(saved);
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        // Migration für neue Features
+                        if (!parsed.A.weeklyHistory) parsed.A.weeklyHistory = [];
+                        if (!parsed.B.weeklyHistory) parsed.B.weeklyHistory = [];
+                        if (!parsed.shared.settings) {
+                            parsed.shared.settings = {
+                                notifications: true,
+                                darkMode: false,
+                                reminderTime: '20:00',
+                                weeklyReduction: true,
+                                reductionRate: 1
+                            };
+                        }
+                        return parsed;
+                    } catch (e) {
+                        console.error('Error parsing saved data:', e);
+                    }
+                }
                 
                 return {
                     A: {
@@ -531,7 +826,11 @@
                         streakDays: 0,
                         totalDaysClean: 0,
                         startDate: new Date().toISOString(),
-                        history: []
+                        history: [],
+                        weeklyHistory: [],
+                        achievements: [],
+                        lastCigaretteTime: null,
+                        averageInterval: 0
                     },
                     B: {
                         name: 'Partner B',
@@ -550,13 +849,24 @@
                         streakDays: 0,
                         totalDaysClean: 0,
                         startDate: new Date().toISOString(),
-                        history: []
+                        history: [],
+                        weeklyHistory: [],
+                        achievements: [],
+                        lastCigaretteTime: null,
+                        averageInterval: 0
                     },
                     shared: {
                         lastSync: new Date().toISOString(),
                         achievements: [],
                         weeklyReductionRate: 1,
-                        flexibilityUsedThisWeek: false
+                        flexibilityUsedThisWeek: false,
+                        settings: {
+                            notifications: true,
+                            darkMode: false,
+                            reminderTime: '20:00',
+                            weeklyReduction: true,
+                            reductionRate: 1
+                        }
                     }
                 };
             });
@@ -566,6 +876,23 @@
                 localStorage.setItem('smokingData', JSON.stringify(userData));
             }, [userData]);
             
+            // Check and save daily history
+            useEffect(() => {
+                const checkEndOfDay = () => {
+                    const now = new Date();
+                    const hours = now.getHours();
+                    const minutes = now.getMinutes();
+                    
+                    // Save history at 23:59
+                    if (hours === 23 && minutes === 59) {
+                        saveDailyHistory();
+                    }
+                };
+                
+                const interval = setInterval(checkEndOfDay, 60000); // Check every minute
+                return () => clearInterval(interval);
+            }, [userData]);
+            
             // Reset daily data at midnight
             useEffect(() => {
                 const checkNewDay = () => {
@@ -573,15 +900,91 @@
                     const today = new Date().toDateString();
                     
                     if (lastCheck !== today) {
+                        // Save yesterday's data before reset
+                        if (lastCheck) {
+                            saveDailyHistory();
+                        }
                         localStorage.setItem('lastDayCheck', today);
                         resetDailyData();
+                        
+                        // Check for weekly reduction
+                        if (userData.shared.settings.weeklyReduction) {
+                            checkWeeklyReduction();
+                        }
                     }
                 };
                 
                 checkNewDay();
-                const interval = setInterval(checkNewDay, 60000); // Check every minute
+                const interval = setInterval(checkNewDay, 60000);
                 return () => clearInterval(interval);
-            }, []);
+            }, [userData]);
+            
+            // Notification system
+            useEffect(() => {
+                if (showNotification) {
+                    const timer = setTimeout(() => {
+                        setShowNotification(null);
+                    }, 3000);
+                    return () => clearTimeout(timer);
+                }
+            }, [showNotification]);
+            
+            const saveDailyHistory = () => {
+                const today = new Date().toDateString();
+                setUserData(prev => {
+                    const newData = { ...prev };
+                    
+                    ['A', 'B'].forEach(user => {
+                        const cigarettesSmoked = prev[user].cigarettesToday.filter(c => c).length;
+                        const avgWithdrawal = Object.values(prev[user].withdrawalSymptoms).reduce((a, b) => a + b, 0) / 4;
+                        
+                        newData[user].history.push({
+                            date: today,
+                            cigarettes: cigarettesSmoked,
+                            limit: prev[user].dailyLimit,
+                            withdrawalAvg: avgWithdrawal,
+                            triggers: [...prev[user].triggers]
+                        });
+                        
+                        // Keep only last 30 days
+                        if (newData[user].history.length > 30) {
+                            newData[user].history.shift();
+                        }
+                        
+                        // Update streak
+                        if (cigarettesSmoked <= prev[user].dailyLimit) {
+                            newData[user].streakDays++;
+                        } else {
+                            newData[user].streakDays = 0;
+                        }
+                    });
+                    
+                    return newData;
+                });
+            };
+            
+            const checkWeeklyReduction = () => {
+                const dayOfWeek = new Date().getDay();
+                if (dayOfWeek === 1) { // Monday
+                    setUserData(prev => {
+                        const newData = { ...prev };
+                        const reductionRate = prev.shared.settings.reductionRate;
+                        
+                        ['A', 'B'].forEach(user => {
+                            const newLimit = Math.max(0, prev[user].dailyLimit - reductionRate);
+                            newData[user].dailyLimit = newLimit;
+                            
+                            // Add achievement for reduction
+                            if (newLimit < prev[user].dailyLimit) {
+                                newData[user].points += 50;
+                                showNotification(`Wochenziel erreicht! Neues Limit: ${newLimit} Zigaretten`);
+                            }
+                        });
+                        
+                        return newData;
+                    });
+                }
+            };
             
             const resetDailyData = () => {
                 setUserData(prev => ({
@@ -596,7 +999,8 @@
                             konzentration: 0,
                             muedigkeit: 0
                         },
-                        triggers: []
+                        triggers: [],
+                        lastCigaretteTime: null
                     },
                     B: {
                         ...prev.B,
@@ -608,7 +1012,12 @@
                             konzentration: 0,
                             muedigkeit: 0
                         },
-                        triggers: []
+                        triggers: [],
+                        lastCigaretteTime: null
+                    },
+                    shared: {
+                        ...prev.shared,
+                        flexibilityUsedThisWeek: false
                     }
                 }));
             };
@@ -625,12 +1034,15 @@
                             isEmergency: true
                         });
                         
+                        showNotification('Notfall-Zigarette verwendet. Bleib stark! 💪');
+                        
                         return {
                             ...prev,
                             [currentUser]: {
                                 ...user,
                                 cigarettesToday: newCigarettes,
-                                emergencyUsed: true
+                                emergencyUsed: true,
+                                lastCigaretteTime: now.toISOString()
                             }
                         };
                     } else if (index < user.dailyLimit && !newCigarettes[index]) {
@@ -639,19 +1051,68 @@
                             isEmergency: false
                         };
                         
-                        // Points for optimal distribution
-                        const hoursSinceLastCig = newCigarettes.length > 1 ? 
-                            (now - new Date(newCigarettes[index - 1]?.time)) / 3600000 : 0;
-                        
+                        // Calculate time since last cigarette
                         let points = 10;
-                        if (hoursSinceLastCig >= 2) points += 5; // Good spacing
+                        if (user.lastCigaretteTime) {
+                            const hoursSinceLast = (now - new Date(user.lastCigaretteTime)) / 3600000;
+                            if (hoursSinceLast >= 2) points += 5;
+                            if (hoursSinceLast >= 3) points += 10;
+                            
+                            // Update average interval
+                            const intervals = [];
+                            for (let i = 1; i < newCigarettes.length; i++) {
+                                if (newCigarettes[i] && newCigarettes[i-1]) {
+                                    intervals.push(
+                                        (new Date(newCigarettes[i].time) - new Date(newCigarettes[i-1].time)) / 3600000
+                                    );
+                                }
+                            }
+                            const avgInterval = intervals.length > 0 
+                                ? intervals.reduce((a, b) => a + b, 0) / intervals.length 
+                                : 0;
+                            
+                            return {
+                                ...prev,
+                                [currentUser]: {
+                                    ...user,
+                                    cigarettesToday: newCigarettes,
+                                    points: user.points + points,
+                                    lastCigaretteTime: now.toISOString(),
+                                    averageInterval: avgInterval
+                                }
+                            };
+                        }
                         
                         return {
                             ...prev,
                             [currentUser]: {
                                 ...user,
                                 cigarettesToday: newCigarettes,
-                                points: user.points + points
+                                points: user.points + points,
+                                lastCigaretteTime: now.toISOString()
+                            }
+                        };
+                    }
+                    
+                    return prev;
+                });
+            };
+            
+            const undoCigarette = (index) => {
+                setUserData(prev => {
+                    const user = prev[currentUser];
+                    const newCigarettes = [...user.cigarettesToday];
+                    
+                    if (newCigarettes[index]) {
+                        newCigarettes[index] = null;
+                        showNotification('Zigarette rückgängig gemacht');
+                        
+                        return {
+                            ...prev,
+                            [currentUser]: {
+                                ...user,
+                                cigarettesToday: newCigarettes,
+                                points: Math.max(0, user.points - 10)
                             }
                         };
                     }
@@ -690,32 +1151,94 @@
                 });
             };
             
+            const updateUserName = (user, name) => {
+                setUserData(prev => ({
+                    ...prev,
+                    [user]: {
+                        ...prev[user],
+                        name: name || `Partner ${user}`
+                    }
+                }));
+                setEditingName(prev => ({ ...prev, [user]: false }));
+                showNotification('Name aktualisiert');
+            };
+            
+            const updateSettings = (key, value) => {
+                setUserData(prev => ({
+                    ...prev,
+                    shared: {
+                        ...prev.shared,
+                        settings: {
+                            ...prev.shared.settings,
+                            [key]: value
+                        }
+                    }
+                }));
+            };
+            
+            const exportData = () => {
+                const dataStr = JSON.stringify(userData, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                const exportFileDefaultName = `rauchfrei-duo-backup-${new Date().toISOString().split('T')[0]}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+                
+                showNotification('Daten exportiert');
+            };
+            
+            const importData = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const imported = JSON.parse(e.target.result);
+                            setUserData(imported);
+                            showNotification('Daten importiert');
+                        } catch (error) {
+                            showNotification('Fehler beim Import');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            
             const getCoachingMessage = () => {
                 const user = userData[currentUser];
                 const cigarettesSmoked = user.cigarettesToday.filter(c => c).length;
                 const timeNow = new Date().getHours();
+                const avgWithdrawal = Object.values(user.withdrawalSymptoms).reduce((a, b) => a + b, 0) / 4;
                 
                 if (cigarettesSmoked === 0 && timeNow > 12) {
                     return {
                         title: "Starke Leistung!",
-                        message: "Du hast heute noch keine Zigarette geraucht. Dein Körper regeneriert sich bereits merklich. Die Sauerstoffversorgung verbessert sich stündlich."
+                        message: "Du hast heute noch keine Zigarette geraucht. Dein Körper regeneriert sich bereits merklich. Die Sauerstoffversorgung verbessert sich stündlich.",
+                        type: "success"
                     };
                 } else if (cigarettesSmoked > user.dailyLimit * 0.7 && timeNow < 15) {
                     return {
                         title: "Strategische Anpassung empfohlen",
-                        message: "Du hast bereits " + cigarettesSmoked + " von " + user.dailyLimit + " Zigaretten konsumiert. Plane die verbleibenden bewusst für potenzielle Stress-Situationen ein."
+                        message: `Du hast bereits ${cigarettesSmoked} von ${user.dailyLimit} Zigaretten konsumiert. Plane die verbleibenden bewusst für potenzielle Stress-Situationen ein.`,
+                        type: "warning"
                     };
-                } else if (user.withdrawalSymptoms.reizbarkeit > 7) {
+                } else if (avgWithdrawal > 6) {
                     return {
                         title: "Entzugsmanagement",
-                        message: "Hohe Reizbarkeit erkannt. Das ist eine normale neurologische Anpassung. Nutze die Atemübung oder einen kurzen Spaziergang zur Dopamin-Regulation."
+                        message: "Starke Entzugssymptome erkannt. Das ist eine normale neurologische Anpassung. Nutze die Atemübung oder einen kurzen Spaziergang zur Dopamin-Regulation.",
+                        type: "info"
+                    };
+                } else if (user.averageInterval > 2.5) {
+                    return {
+                        title: "Optimale Verteilung!",
+                        message: `Durchschnittlich ${user.averageInterval.toFixed(1)} Stunden zwischen Zigaretten. Exzellente Selbstkontrolle!`,
+                        type: "success"
                     };
                 } else {
-                    return {
-                        title: "Fortschritt messbar",
-                        message: "Du kontrollierst deinen Konsum bewusst. Jede Stunde ohne Zigarette verbessert deine Lungenfunktion um ca. 2%. Weiter so!"
-                    };
-                }
+                    } else {
+                        return {
             };
             
             const calculateProgress = () => {
@@ -725,10 +1248,11 @@
             };
             
             const getLevelInfo = (points) => {
-                if (points < 100) return { level: 'Starter', icon: '🌱' };
-                if (points < 500) return { level: 'Fortgeschritten', icon: '🌿' };
-                if (points < 1000) return { level: 'Experte', icon: '🌳' };
-                return { level: 'Meister', icon: '🏆' };
+                if (points < 100) return { level: 'Starter', icon: '🌱', next: 100 };
+                if (points < 500) return { level: 'Fortgeschritten', icon: '🌿', next: 500 };
+                if (points < 1000) return { level: 'Experte', icon: '🌳', next: 1000 };
+                if (points < 2000) return { level: 'Meister', icon: '🏆', next: 2000 };
+                return { level: 'Legende', icon: '👑', next: null };
             };
             
             const formatTime = (isoString) => {
@@ -737,11 +1261,30 @@
                 return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
             };
             
+            const getTimeSinceLastCigarette = () => {
+                const user = userData[currentUser];
+                if (!user.lastCigaretteTime) return null;
+                
+                const now = new Date();
+                const last = new Date(user.lastCigaretteTime);
+                const diffMs = now - last;
+                const diffMins = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMins / 60);
+                const mins = diffMins % 60;
+                
+                if (diffHours > 0) {
+                    return `${diffHours}h ${mins}min`;
+                } else {
+                    return `${mins}min`;
+                }
+            };
+            
             // Render Functions
             const renderTodayTab = () => {
                 const user = userData[currentUser];
                 const cigarettesSmoked = user.cigarettesToday.filter(c => c).length;
                 const coaching = getCoachingMessage();
+                const timeSince = getTimeSinceLastCigarette();
                 
                 return (
                     <>
@@ -761,6 +1304,23 @@
                                 </div>
                             </div>
                             
+                            {timeSince && (
+                                <div style={{ 
+                                    textAlign: 'center', 
+                                    padding: '0.75rem', 
+                                    background: 'var(--gray-50)', 
+                                    borderRadius: '0.5rem',
+                                    marginBottom: '1rem'
+                                }}>
+                                    <div style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>
+                                        Zeit seit letzter Zigarette
+                                    </div>
+                                    <div style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--primary)' }}>
+                                        {timeSince}
+                                    </div>
+                                </div>
+                            )}
+                            
                             <div className="progress-bar">
                                 <div 
                                     className="progress-fill" 
@@ -775,9 +1335,10 @@
                                     <button
                                         key={i}
                                         className={`cigarette-btn ${user.cigarettesToday[i] ? 'smoked' : ''}`}
-                                        onClick={() => recordCigarette(i)}
+                                        onClick={() => user.cigarettesToday[i] ? undoCigarette(i) : recordCigarette(i)}
+                                        onDoubleClick={() => user.cigarettesToday[i] && undoCigarette(i)}
                                     >
-                                        {user.cigarettesToday[i] ? '🚬' : `${i + 1}`}
+                                        <span>{user.cigarettesToday[i] ? '🚬' : `${i + 1}`}</span>
                                         {user.cigarettesToday[i] && (
                                             <span className="cigarette-time">
                                                 {formatTime(user.cigarettesToday[i].time)}
@@ -794,10 +1355,14 @@
                                     </button>
                                 )}
                             </div>
+                            
+                            <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', textAlign: 'center', marginTop: '0.5rem' }}>
+                                Tipp: Doppelklick zum Rückgängigmachen
+                            </p>
                         </div>
                         
                         <div className="card">
-                            <div className="coach-message">
+                            <div className={`coach-message ${coaching.type}`}>
                                 <h4>{coaching.title}</h4>
                                 <p>{coaching.message}</p>
                             </div>
@@ -805,457 +1370,3 @@
                     </>
                 );
             };
-            
-            const renderWithdrawalTab = () => {
-                const user = userData[currentUser];
-                const symptoms = [
-                    { key: 'reizbarkeit', label: 'Reizbarkeit' },
-                    { key: 'hunger', label: 'Hunger/Appetit' },
-                    { key: 'konzentration', label: 'Konzentration' },
-                    { key: 'muedigkeit', label: 'Müdigkeit' }
-                ];
-                
-                const triggers = [
-                    'Arbeitsstress', 'Kaffeepause', 'Nach dem Essen',
-                    'Soziale Situation', 'Alkohol', 'Langeweile',
-                    'Streit', 'Autofahren', 'Telefongespräch'
-                ];
-                
-                return (
-                    <div className="card">
-                        <h3 style={{ marginBottom: '1rem', color: 'var(--gray-800)' }}>
-                            Entzugs-Tracking
-                        </h3>
-                        
-                        <div className="withdrawal-tracker">
-                            {symptoms.map(symptom => (
-                                <div key={symptom.key} className="withdrawal-item">
-                                    <span className="withdrawal-label">{symptom.label}</span>
-                                    <div className="withdrawal-scale">
-                                        {[...Array(10)].map((_, i) => (
-                                            <button
-                                                key={i}
-                                                className={`scale-btn ${user.withdrawalSymptoms[symptom.key] === i + 1 ? 'selected' : ''}`}
-                                                onClick={() => updateWithdrawal(symptom.key, i + 1)}
-                                            >
-                                                {i + 1}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        
-                        <h4 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', color: 'var(--gray-800)' }}>
-                            Heutige Trigger
-                        </h4>
-                        
-                        <div className="trigger-list">
-                            {triggers.map(trigger => (
-                                <button
-                                    key={trigger}
-                                    className={`trigger-tag ${user.triggers.includes(trigger) ? 'active' : ''}`}
-                                    onClick={() => toggleTrigger(trigger)}
-                                >
-                                    {trigger}
-                                </button>
-                            ))}
-                        </div>
-                        
-                        {user.withdrawalSymptoms.reizbarkeit > 5 && (
-                            <div className="coach-message" style={{ marginTop: '1rem' }}>
-                                <h4>Bewältigungsstrategie</h4>
-                                <p>
-                                    Erhöhte Reizbarkeit ist ein Zeichen aktiver Neuroadaptation. 
-                                    Dein Dopamin-System stellt sich um. Nutze progressive Muskelentspannung 
-                                    oder die 4-7-8 Atemtechnik zur Regulation.
-                                </p>
-                            </div>
-                        )}
-                    </div>
-                );
-            };
-            
-            const renderProgressTab = () => {
-                const user = userData[currentUser];
-                const partner = userData[currentUser === 'A' ? 'B' : 'A'];
-                const levelInfo = getLevelInfo(user.points);
-                
-                const daysSinceStart = Math.floor(
-                    (new Date() - new Date(user.startDate)) / (1000 * 60 * 60 * 24)
-                );
-                
-                return (
-                    <>
-                        <div className="card">
-                            <h3 style={{ marginBottom: '1rem', color: 'var(--gray-800)' }}>
-                                Dein Fortschritt
-                            </h3>
-                            
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                                <div className="level-badge">
-                                    <span>{levelInfo.icon}</span>
-                                    <span>{levelInfo.level}</span>
-                                </div>
-                                <div style={{ textAlign: 'right' }}>
-                                    <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary)' }}>
-                                        {user.points} Punkte
-                                    </div>
-                                    <div style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>
-                                        Tag {daysSinceStart + 1}
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div className="stats-grid">
-                                <div className="stat-card">
-                                    <div className="stat-value">{user.streakDays}</div>
-                                    <div className="stat-label">Tage in Folge</div>
-                                </div>
-                                <div className="stat-card">
-                                    <div className="stat-value">{user.dailyLimit}</div>
-                                    <div className="stat-label">Tägliches Limit</div>
-                                </div>
-                            </div>
-                            
-                            <div className="partner-sync">
-                                <div className="partner-status">
-                                    <span>
-                                        <span className="status-indicator"></span>
-                                        Partner {currentUser === 'A' ? 'B' : 'A'}
-                                    </span>
-                                    <span style={{ fontWeight: '600' }}>
-                                        {partner.cigarettesToday.filter(c => c).length}/{partner.dailyLimit} heute
-                                    </span>
-                                </div>
-                                <p style={{ fontSize: '0.875rem', color: 'var(--gray-600)', marginTop: '0.5rem' }}>
-                                    Ihr macht gemeinsam Fortschritte. Starke Teamleistung!
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div className="card">
-                            <h3 style={{ marginBottom: '1rem', color: 'var(--gray-800)' }}>
-                                Körperliche Regeneration
-                            </h3>
-                            
-                            <div style={{ marginBottom: '1rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.75rem' }}>
-                                    <span style={{ fontSize: '1.5rem', marginRight: '0.75rem' }}>🫁</span>
-                                    <div style={{ flex: 1 }}>
-                                        <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Lungenfunktion</div>
-                                        <div style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>
-                                            +{Math.min(daysSinceStart * 2, 30)}% verbessert
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.75rem' }}>
-                                    <span style={{ fontSize: '1.5rem', marginRight: '0.75rem' }}>❤️</span>
-                                    <div style={{ flex: 1 }}>
-                                        <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Herzfrequenz</div>
-                                        <div style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>
-                                            Normalisiert sich zunehmend
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.75rem' }}>
-                                    <span style={{ fontSize: '1.5rem', marginRight: '0.75rem' }}>👃</span>
-                                    <div style={{ flex: 1 }}>
-                                        <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Geruchssinn</div>
-                                        <div style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>
-                                            {daysSinceStart > 3 ? 'Deutlich verbessert' : 'Beginnt sich zu verbessern'}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </>
-                );
-            };
-            
-            const renderStrategiesTab = () => {
-                const strategies = [
-                    {
-                        title: "4-7-8 Atemtechnik",
-                        description: "4 Sekunden einatmen, 7 halten, 8 ausatmen. Aktiviert Parasympathikus.",
-                        icon: "🧘"
-                    },
-                    {
-                        title: "Kaugummi-Strategie",
-                        description: "Zuckerfreier Kaugummi befriedigt orales Bedürfnis ohne Nikotin.",
-                        icon: "🍬"
-                    },
-                    {
-                        title: "5-Minuten-Regel",
-                        description: "Verlangen dauert durchschnittlich 3-5 Minuten. Abwarten funktioniert.",
-                        icon: "⏱️"
-                    },
-                    {
-                        title: "Wasser-Technik",
-                        description: "Ein Glas kaltes Wasser trinken. Unterbricht Sucht-Automatismus.",
-                        icon: "💧"
-                    },
-                    {
-                        title: "Bewegungs-Intervention",
-                        description: "Kurzer Spaziergang oder 20 Kniebeugen. Dopamin-Alternative.",
-                        icon: "🏃"
-                    },
-                    {
-                        title: "Partner-Check-In",
-                        description: "Kurznachricht an Partner. Gemeinsame Accountability nutzen.",
-                        icon: "💬"
-                    }
-                ];
-                
-                const achievements = [
-                    {
-                        title: "Erste 24 Stunden",
-                        description: "Kontingent eingehalten für einen Tag",
-                        earned: true,
-                        icon: "🎯"
-                    },
-                    {
-                        title: "Arbeitswoche gemeistert",
-                        description: "5 Tage Stress-Management ohne Überschreitung",
-                        earned: false,
-                        icon: "💼"
-                    },
-                    {
-                        title: "Team-Erfolg",
-                        description: "Beide Partner 7 Tage innerhalb Limit",
-                        earned: false,
-                        icon: "🤝"
-                    }
-                ];
-                
-                return (
-                    <>
-                        <div className="card">
-                            <h3 style={{ marginBottom: '1rem', color: 'var(--gray-800)' }}>
-                                Bewältigungsstrategien
-                            </h3>
-                            
-                            {strategies.map((strategy, index) => (
-                                <div key={index} style={{ 
-                                    display: 'flex', 
-                                    alignItems: 'flex-start', 
-                                    marginBottom: '1rem',
-                                    padding: '0.75rem',
-                                    background: 'var(--gray-50)',
-                                    borderRadius: '0.5rem'
-                                }}>
-                                    <span style={{ fontSize: '1.5rem', marginRight: '0.75rem' }}>
-                                        {strategy.icon}
-                                    </span>
-                                    <div>
-                                        <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>
-                                            {strategy.title}
-                                        </div>
-                                        <div style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>
-                                            {strategy.description}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        
-                        <div className="card">
-                            <h3 style={{ marginBottom: '1rem', color: 'var(--gray-800)' }}>
-                                Achievements
-                            </h3>
-                            
-                            {achievements.map((achievement, index) => (
-                                <div 
-                                    key={index}
-                                    className={achievement.earned ? 'achievement-card' : ''}
-                                    style={!achievement.earned ? {
-                                        padding: '1rem',
-                                        background: 'var(--gray-100)',
-                                        borderRadius: '0.75rem',
-                                        marginBottom: '0.75rem',
-                                        opacity: 0.6,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '1rem'
-                                    } : {}}
-                                >
-                                    <div className="achievement-icon">
-                                        {achievement.icon}
-                                    </div>
-                                    <div className="achievement-content">
-                                        <h4>{achievement.title}</h4>
-                                        <p>{achievement.description}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </>
-                );
-            };
-            
-            const CrisisModal = () => {
-                const [breathPhase, setBreathPhase] = useState('ready');
-                const [breathCount, setBreathCount] = useState(0);
-                
-                const startBreathing = () => {
-                    setBreathPhase('inhale');
-                    setBreathCount(1);
-                    
-                    const phases = [
-                        { phase: 'inhale', duration: 4000, text: 'Einatmen...' },
-                        { phase: 'hold', duration: 7000, text: 'Halten...' },
-                        { phase: 'exhale', duration: 8000, text: 'Ausatmen...' }
-                    ];
-                    
-                    let totalDuration = 0;
-                    phases.forEach((p, index) => {
-                        setTimeout(() => {
-                            setBreathPhase(p.phase);
-                        }, totalDuration);
-                        totalDuration += p.duration;
-                    });
-                    
-                    setTimeout(() => {
-                        if (breathCount < 3) {
-                            setBreathCount(prev => prev + 1);
-                            startBreathing();
-                        } else {
-                            setBreathPhase('complete');
-                        }
-                    }, totalDuration);
-                };
-                
-                const getBreathText = () => {
-                    switch(breathPhase) {
-                        case 'ready': return 'Bereit? Lass uns gemeinsam atmen.';
-                        case 'inhale': return '4 Sekunden einatmen...';
-                        case 'hold': return '7 Sekunden halten...';
-                        case 'exhale': return '8 Sekunden ausatmen...';
-                        case 'complete': return 'Gut gemacht! Das Verlangen wird nachlassen.';
-                        default: return '';
-                    }
-                };
-                
-                return (
-                    <div className="modal">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h3>Akut-Intervention</h3>
-                            </div>
-                            
-                            <div className="breathing-exercise">
-                                <div className="breath-circle"></div>
-                                <p className="breath-text">{getBreathText()}</p>
-                                {breathPhase === 'ready' && (
-                                    <button className="btn" onClick={startBreathing} style={{ marginTop: '1rem' }}>
-                                        Atemübung starten
-                                    </button>
-                                )}
-                                {breathPhase === 'complete' && (
-                                    <button className="btn btn-secondary" onClick={() => setShowCrisisModal(false)} style={{ marginTop: '1rem' }}>
-                                        Schließen
-                                    </button>
-                                )}
-                            </div>
-                            
-                            <div style={{ marginTop: '1.5rem' }}>
-                                <h4 style={{ marginBottom: '0.75rem' }}>Sofort-Strategien:</h4>
-                                <ul style={{ paddingLeft: '1.5rem', lineHeight: '1.8' }}>
-                                    <li>Verlangen dauert nur 3-5 Minuten</li>
-                                    <li>Trinke sofort ein großes Glas kaltes Wasser</li>
-                                    <li>Verlasse den Raum / ändere die Situation</li>
-                                    <li>Schreibe deinem Partner eine Nachricht</li>
-                                    <li>Mache 20 Kniebeugen oder Liegestütze</li>
-                                </ul>
-                            </div>
-                            
-                            {breathPhase !== 'inhale' && breathPhase !== 'hold' && breathPhase !== 'exhale' && (
-                                <button 
-                                    className="btn btn-secondary" 
-                                    onClick={() => setShowCrisisModal(false)}
-                                    style={{ marginTop: '1rem' }}
-                                >
-                                    Schließen
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                );
-            };
-            
-            return (
-                <div className="container">
-                    <div className="header">
-                        <h1>RauchFrei Duo</h1>
-                        <p style={{ color: 'var(--gray-600)', marginBottom: '1rem' }}>
-                            Gemeinsam zum Ziel - Tag {Math.floor((new Date() - new Date(userData.A.startDate)) / (1000 * 60 * 60 * 24)) + 1}
-                        </p>
-                        
-                        <div className="user-selector">
-                            <button 
-                                className={`user-btn ${currentUser === 'A' ? 'active' : ''}`}
-                                onClick={() => setCurrentUser('A')}
-                            >
-                                {userData.A.name}
-                            </button>
-                            <button 
-                                className={`user-btn ${currentUser === 'B' ? 'active' : ''}`}
-                                onClick={() => setCurrentUser('B')}
-                            >
-                                {userData.B.name}
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div className="tab-navigation">
-                        <button 
-                            className={`tab-btn ${activeTab === 'today' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('today')}
-                        >
-                            Heute
-                        </button>
-                        <button 
-                            className={`tab-btn ${activeTab === 'withdrawal' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('withdrawal')}
-                        >
-                            Entzug
-                        </button>
-                        <button 
-                            className={`tab-btn ${activeTab === 'progress' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('progress')}
-                        >
-                            Fortschritt
-                        </button>
-                        <button 
-                            className={`tab-btn ${activeTab === 'strategies' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('strategies')}
-                        >
-                            Strategien
-                        </button>
-                    </div>
-                    
-                    {activeTab === 'today' && renderTodayTab()}
-                    {activeTab === 'withdrawal' && renderWithdrawalTab()}
-                    {activeTab === 'progress' && renderProgressTab()}
-                    {activeTab === 'strategies' && renderStrategiesTab()}
-                    
-                    <button 
-                        className="crisis-btn"
-                        onClick={() => setShowCrisisModal(true)}
-                        title="Akutes Verlangen - Soforthilfe"
-                    >
-                        🆘
-                    </button>
-                    
-                    {showCrisisModal && <CrisisModal />}
-                </div>
-            );
-        };
-        
-        // Render the app
-        ReactDOM.render(<SmokingCessationApp />, document.getElementById('app'));
-    </script>
-</body>
-</html>
